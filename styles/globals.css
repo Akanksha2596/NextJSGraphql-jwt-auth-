@@ -1,0 +1,82 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+/* SigninForm.css */
+
+/* Container styling */
+.signin-form-container {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+/* Heading styling */
+.signin-form-container h2 {
+  text-align: center;
+}
+
+/* Form styling */
+.signin-form-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Label styling */
+.signin-form-container label {
+  font-weight: bold;
+}
+
+/* Input fields styling */
+.signin-form-container input[type="email"],
+.signin-form-container input[type="password"],
+.signin-form-container input[type="submit"] {
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Submit button styling */
+.signin-form-container input[type="submit"] {
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+}
+
+/* Hover effect for submit button */
+.signin-form-container input[type="submit"]:hover {
+  background-color: #45a049;
+}
