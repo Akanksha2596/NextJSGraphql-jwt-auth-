@@ -1,8 +1,9 @@
-import { useState } from "react"
-import styles from "../styles/SignupForm.module.css"
-import { gql, useMutation } from "@apollo/client"
+import { useState } from "react";
+import styles from "../styles/SignupForm.module.css";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import Cookies from "js-cookie";
 
-let Register_User = gql(`
+const Register_User = gql(`
 mutation registerUser($username: String!, $email: String!, $password:String!) {  
     register(input: {
       username: $username
@@ -17,24 +18,46 @@ mutation registerUser($username: String!, $email: String!, $password:String!) {
       }
     }
     }
-`)
+`);
 
-const GetUserBy_Id = gql`query ($usersPermissionsUserId: ID) {
+const GetUserBy_Id = gql(`query ($usersPermissionsUserId: ID) {
     usersPermissionsUser(id: $usersPermissionsUserId) {
       data {
         attributes {
           email
+          username
         }
       }
     }
   }
- `
+ `);
+
+const UserDetails = ({ userId }: any) => {
+  const { loading, error, data } = useQuery(GetUserBy_Id, {
+    variables: { usersPermissionsUserId: userId },
+  });
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  const { username, email } = data.usersPermissionsUser.data.attributes;
+  console.log(username, "user name");
+  console.log(email, "name");
+  return (
+    <div>
+      <p>Username: {username}</p>
+      <p>Email: {email}</p>
+    </div>
+  );
+};
+
 const RegisterUser = () => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
-  })
+    id: null,
+  });
 
   let [RegisterMutation] = useMutation(Register_User, {
     variables: {
@@ -44,27 +67,34 @@ const RegisterUser = () => {
     },
 
     onCompleted(data) {
-      console.log("data", data)
+      console.log("data", data);
+      setFormData((prevData) => ({
+        ...prevData,
+        id: data.register.user.id,
+      }));
+      if (data !== null) {
+        alert("User registered successfully!");
+      }
+      Cookies.set("token", data?.register?.jwt);
     },
 
     onError(error, clientOptions) {
-      console.log("error", error.message)
+      console.log("error", error.message);
     },
-  })
-  const handleChange = (e :any ) => {
-    const { name, value } = e.target
+  });
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
-  const handleSubmit = async (e :any) => {
-    e.preventDefault()
-    let result = await RegisterMutation()
-
-    console.log("result", result)
-  }
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    let result = await RegisterMutation();
+    console.log("result", result);
+  };
 
   return (
     <>
@@ -99,8 +129,14 @@ const RegisterUser = () => {
         </label>
         <button type="submit">Sign Up</button>
       </form>
+      {formData.id && (
+        <>
+          <h1>Getting the Registered User by Id</h1>
+          <UserDetails userId={formData.id} />
+        </>
+      )}
     </>
-  )
-}
+  );
+};
 
-export default RegisterUser
+export default RegisterUser;
