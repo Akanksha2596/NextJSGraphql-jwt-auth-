@@ -1,12 +1,12 @@
 import Link from "next/link";
 import SignInForm from "@/components/SignInFrom";
+import RegisterUser from "@/components/RegisterUser";
 export default function Home() {
   return (
-    <div>
-      <h1>SIGN In </h1>
-      <SignInForm />
+    <div> 
       {/* <SignupForm /> */}
-      <Link href="/register"> Register User</Link>
+      <Link href="/register"> <h1>Register User</h1></Link>
+      <SignInForm />
     </div>
   )
 }
